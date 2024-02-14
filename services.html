@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services Page</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .service {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Services</h1>
+        <div id="servicesList"></div>
+    </div>
+
+    
+
+    <script>
+        // JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = '1f5705ee41971d37c8b189092768180efce38d82071c5515fff964e570040371358f384c4565544829a3e66fd9aee0302d59395c679ba98228aa55d4764e2f85cc0970644d8236acf995e45f5509ea03aa019defea79297831eebf49a22d2df750da040518c9c9d090561fe17967195f7b448561f67fb25600b51f8b712e7747'; // Replace 'YOUR_BEARER_TOKEN_HERE' with your actual bearer token
+
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${token}`);
+
+            fetch('http://localhost:1337/api/services', {
+                method: 'GET',
+                headers: headers
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data:', data); // Log the data to see its structure
+                    const servicesList = document.getElementById('servicesList');
+                    // Check if data is an array
+                    if (Array.isArray(data.data)) {
+                        data.data.forEach(service => {
+                            const serviceDiv = document.createElement('div');
+                            serviceDiv.classList.add('service');
+                            serviceDiv.innerHTML = `
+                                <h2>${service.attributes.Title}</h2>
+                                <p>${service.attributes.Description}</p>
+                            `;
+                            servicesList.appendChild(serviceDiv);
+                        });
+                    } else {
+                        console.error('Data is not an array:', data);
+                    }
+                })
+                .catch(error => console.error('Error fetching services:', error));
+        });
+    </script>
+
+
+</body>
+
+</html>
